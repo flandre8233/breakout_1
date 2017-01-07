@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: cd3157dd0f66f4c469b363fe6d8be0bb
+timeCreated: 1483808581
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - ballPrefab: {instanceID: 0}
+  - paddleleft: {fileID: 4941451946151108, guid: 54df8178712f9fe44bfe15800bd9a1b7,
+      type: 2}
+  - paddleright: {fileID: 4045119956531468, guid: 7f405bfb2b0801e4185890a4cae69421,
+      type: 2}
+  - first_Row: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
