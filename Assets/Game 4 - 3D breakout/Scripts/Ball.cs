@@ -11,6 +11,7 @@ public class Ball: MonoBehaviour {
     //Transform rightkillzone;
     public ballType thisball_type;
 
+    Vector3 oldV3;
 
     void Start () {
         //breakoutgame = GameObject.FindGameObjectsWithTag("MainCamera")[0].GetComponent<BreakoutGame>();
@@ -30,25 +31,6 @@ public class Ball: MonoBehaviour {
             default:
                 break;
         }
-    }
-
-    void Update()
-    {
-        //Make sure we stay between the MAX and MIN speed.
-
-
-
-        float totalVelocity = Vector3.Magnitude(GetComponent<Rigidbody>().velocity);
-        if (totalVelocity > maxVelocity)
-        {
-            float tooHard = totalVelocity / maxVelocity;
-            GetComponent<Rigidbody>().velocity /= tooHard;
-        }
-        else if (totalVelocity < minVelocity)
-        {
-            float tooSlowRate = totalVelocity / minVelocity;
-            GetComponent<Rigidbody>().velocity /= tooSlowRate;
-        }
 
         switch (thisball_type)
         {
@@ -61,24 +43,68 @@ public class Ball: MonoBehaviour {
             default:
                 break;
         }
+    }
+
+    void Update()
+    {
+        //Make sure we stay between the MAX and MIN speed.
+
+
+        if (GetComponent<NetworkView>().isMine)
+        {
+            float moveInput = 0.0f;
+
+            float totalVelocity = Vector3.Magnitude(GetComponent<Rigidbody>().velocity);
+            if (totalVelocity > maxVelocity)
+            {
+                float tooHard = totalVelocity / maxVelocity;
+                GetComponent<Rigidbody>().velocity /= tooHard;
+            }
+            else if (totalVelocity < minVelocity)
+            {
+                float tooSlowRate = totalVelocity / minVelocity;
+                GetComponent<Rigidbody>().velocity /= tooSlowRate;
+            }
+
+            if (Vector3.Distance(transform.position, oldV3) >= 0.05)
+            {
+                oldV3 = transform.position;
+                GetComponent<NetworkView>().RPC("sendMovement", RPCMode.Others, transform.position);
+            }
+
+        }
+        else
+        {
+
+        }
+
+
+
 
         //Is the ball below -3? Then we're game over.
-        if (transform.position.z <= leftkillzone.position.z)
+        if (transform.position.z <= leftkillzone.position.z )
         {
             BreakoutGame.SP.allow_ball();
             BreakoutGame.SP.LostBall();
-            Destroy(gameObject);
-           
+            //Destroy(gameObject);
+            Network.Destroy(gameObject);
+
         }
 
     }
 
+    [RPC]
+    void sendMovement(Vector3 v3)
+    {
+        transform.position = v3;
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "right_boxcollider")
         {
             BreakoutGame.SP.LostBall_right();
-            Destroy(gameObject);
+            Network.Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 

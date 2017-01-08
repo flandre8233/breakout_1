@@ -9,6 +9,8 @@ public class BreakoutGame : MonoBehaviour
     public bool gameStart;
 
     public Transform ballPrefab;
+    public Transform paddleBallSpawnPoint;
+    public paddleType playerPaddleType;
     public Transform paddleleftspawn;
     public Transform paddlerightspawn;
 
@@ -34,7 +36,6 @@ public class BreakoutGame : MonoBehaviour
     //SpawnBall(0);
 }
     void Start() {
-
         firstPositionZ = first_Row.position.z;
     }
 
@@ -46,20 +47,20 @@ public class BreakoutGame : MonoBehaviour
         switch (ballSpawnMethod)
         {
             case 1:
-                cloneObjectleft = (Instantiate(ballPrefab, paddleleftspawn.position, Quaternion.identity) as Transform).gameObject; // left球射出的座標
+                cloneObjectleft = (Network.Instantiate(ballPrefab, paddleBallSpawnPoint.position, Quaternion.identity,0) as Transform).gameObject; // left球射出的座標
                 //Debug.Log(paddleleft.position);
                 cloneObjectleft.GetComponent<Ball>().thisball_type = ballType.left;
 
                 break;
             case 2:
-                cloneObjectright = (Instantiate(ballPrefab, paddlerightspawn.position, Quaternion.identity) as Transform).gameObject;
+                cloneObjectright = (Network.Instantiate(ballPrefab, paddleBallSpawnPoint.position, Quaternion.identity, 0) as Transform).gameObject;
                 cloneObjectright.GetComponent<Ball>().thisball_type = ballType.right;
                 break;
             case 0:
-                cloneObjectleft = (Instantiate(ballPrefab, paddleleftspawn.position, Quaternion.identity) as Transform).gameObject; // right球射出的座標
-                cloneObjectleft.GetComponent<Ball>().thisball_type = ballType.left;
-                cloneObjectright = (Instantiate(ballPrefab, paddlerightspawn.position, Quaternion.identity) as Transform).gameObject;
-                cloneObjectright.GetComponent<Ball>().thisball_type = ballType.right;
+                //cloneObjectleft = (Instantiate(ballPrefab, paddleleftspawn.position, Quaternion.identity) as Transform).gameObject; // right球射出的座標
+                //cloneObjectleft.GetComponent<Ball>().thisball_type = ballType.left;
+                //cloneObjectright = (Instantiate(ballPrefab, paddlerightspawn.position, Quaternion.identity) as Transform).gameObject;
+                //cloneObjectright.GetComponent<Ball>().thisball_type = ballType.right;
                 break;
             default:
                 break;
@@ -72,14 +73,32 @@ public class BreakoutGame : MonoBehaviour
     {
         if (SP.gameStart)
         {
-            if (Input.GetMouseButtonDown(2) && allow_ball_left)
+            if (Input.GetMouseButtonDown(0) && allow_ball_left)
+            {
+                switch (playerPaddleType)
+                {
+                    case paddleType.left:
+                        SpawnBall(1);
+                        break;
+                    case paddleType.right:
+                        SpawnBall(2);
+                        break;
+                    default:
+                        break;
+                }
+                
+            }
+                
+            /*
+            if (Input.GetMouseButtonDown(0) && allow_ball_left)
                 SpawnBall(1);
             //if()
-            /*if(Input.GetMouseButtonDown(0))
-                SpawnBall(2);*/
+            if(Input.GetMouseButtonDown(0))
+                SpawnBall(2);
             if (Input.GetMouseButtonDown(1) && allow_ball_right)//連線時更改，left射波，right道具
                 SpawnBall(2);
 
+            */
         }
 
     }

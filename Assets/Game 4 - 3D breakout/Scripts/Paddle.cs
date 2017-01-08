@@ -18,7 +18,7 @@ public class Paddle : MonoBehaviour {
             if (GetComponent<NetworkView>().isMine)
             {
                 float moveInput = 0.0f;
-                Debug.Log(thisPaddleType);
+                
                 moveInput = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
                 transform.position += new Vector3(moveInput, 0, 0);
                 float max = 16.5f;
