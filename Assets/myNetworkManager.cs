@@ -19,9 +19,6 @@ public class myNetworkManager : MonoBehaviour {
     {
         SpawnplayerPaddle(RightPaddleSpawnPoint.position, paddleType.right);
 
-        BreakoutGame.SP.paddleleftspawn = GameObject.FindGameObjectsWithTag("LeftPaddleSpawnPoint")[0].transform;
-        BreakoutGame.SP.paddlerightspawn = GameObject.FindGameObjectsWithTag("RightPaddleSpawnPoint")[0].transform;
-
         // maybe onstart here
         BreakoutGame.SP.gameStart = true;
     }
@@ -30,6 +27,18 @@ public class myNetworkManager : MonoBehaviour {
     {
         GameObject clone =  (Network.Instantiate(playerPaddle,spawnPoint,Quaternion.identity,0) as Transform).gameObject;
         clone.GetComponent<Paddle>().thisPaddleType = Type;
+
+        switch (Type)
+        {
+            case paddleType.left:
+                BreakoutGame.SP.paddleleftspawn = GetComponentInChildren<Transform>();
+                break;
+            case paddleType.right:
+                BreakoutGame.SP.paddlerightspawn = GetComponentInChildren<Transform>();
+                break;
+            default:
+                break;
+        }
 
     }
 
