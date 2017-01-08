@@ -29,10 +29,13 @@ public class BreakoutGame : MonoBehaviour
         gameState = BreakoutGameState.playing;
         totalBlocks = GameObject.FindGameObjectsWithTag("Pickup").Length;
         Time.timeScale = 1.0f;
-        
 
     //SpawnBall(0);
 }
+    void Start() {
+
+        firstPositionZ = first_Row.position.z;
+    }
 
     void SpawnBall(int ballSpawnMethod)
     {
@@ -63,14 +66,11 @@ public class BreakoutGame : MonoBehaviour
         #endregion
     }
 
-    private void Start()
-    {
-        firstPositionZ = first_Row.position.z;
-    }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && allow_ball_left)
+        
+        if (Input.GetMouseButtonDown(2) && allow_ball_left)
             SpawnBall(1);
         //if()
         /*if(Input.GetMouseButtonDown(0))
