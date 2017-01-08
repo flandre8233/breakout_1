@@ -6,6 +6,7 @@ public enum BreakoutGameState { playing, won, lost };
 public class BreakoutGame : MonoBehaviour
 {
     public static BreakoutGame SP;
+    public bool gameStart;
 
     public Transform ballPrefab;
     public Transform paddleleftspawn;
@@ -69,15 +70,17 @@ public class BreakoutGame : MonoBehaviour
 
     void Update()
     {
-        
-        if (Input.GetMouseButtonDown(2) && allow_ball_left)
-            SpawnBall(1);
-        //if()
-        /*if(Input.GetMouseButtonDown(0))
-            SpawnBall(2);*/
-        if (Input.GetMouseButtonDown(1) && allow_ball_right)//連線時更改，left射波，right道具
-            SpawnBall(2);
+        if (SP.gameStart)
+        {
+            if (Input.GetMouseButtonDown(2) && allow_ball_left)
+                SpawnBall(1);
+            //if()
+            /*if(Input.GetMouseButtonDown(0))
+                SpawnBall(2);*/
+            if (Input.GetMouseButtonDown(1) && allow_ball_right)//連線時更改，left射波，right道具
+                SpawnBall(2);
 
+        }
 
     }
         void OnGUI(){

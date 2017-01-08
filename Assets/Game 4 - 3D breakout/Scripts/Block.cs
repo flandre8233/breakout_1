@@ -11,7 +11,7 @@ public class Block : MonoBehaviour {
     int countdown = 10;
     private void Update()
     {
-        if ((timeCounter += Time.deltaTime) >= countdown && countdown > 4)
+        if ((timeCounter += Time.deltaTime) >= countdown && countdown > 4 && BreakoutGame.SP.gameStart)
         {
             timeCounter = 0.0f;
             move_block();

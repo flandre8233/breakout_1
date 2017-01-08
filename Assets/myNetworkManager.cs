@@ -21,6 +21,9 @@ public class myNetworkManager : MonoBehaviour {
 
         BreakoutGame.SP.paddleleftspawn = GameObject.FindGameObjectsWithTag("LeftPaddleSpawnPoint")[0].transform;
         BreakoutGame.SP.paddlerightspawn = GameObject.FindGameObjectsWithTag("RightPaddleSpawnPoint")[0].transform;
+
+        // maybe onstart here
+        BreakoutGame.SP.gameStart = true;
     }
 
     void SpawnplayerPaddle(Vector3 spawnPoint,paddleType Type)
