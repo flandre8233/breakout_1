@@ -36,7 +36,7 @@ public class Block : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (gameObject.GetComponent<NetworkView>().isMine)
+        if (gameObject.GetComponent<NetworkView>().isMine && collision.gameObject.tag == "Player")
         {
             BreakoutGame.SP.HitBlock();
            
