@@ -95,9 +95,8 @@ public class Ball: MonoBehaviour {
             BreakoutGame.SP.LostBall();
             //Destroy(gameObject);
             Network.Destroy(gameObject);
-        
-            Network.RemoveRPCs(gameObject.GetComponent<NetworkViewID>());
 
+            Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
         }
 
     }
@@ -120,7 +119,7 @@ public class Ball: MonoBehaviour {
         {
             BreakoutGame.SP.allow_ball_f();
             Network.Destroy(gameObject);
-            Network.RemoveRPCs(gameObject.GetComponent<NetworkViewID>());
+            Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);       
             //Destroy(gameObject);
         }
     }
