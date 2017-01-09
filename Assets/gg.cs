@@ -6,26 +6,38 @@ public class gg : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+        smallFont = new GUIStyle();
+        largeFont = new GUIStyle();
+
+        smallFont.fontSize = 10;
+        largeFont.fontSize = 32;
+        largeFont.normal.textColor = Color.white;
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
 
+    GUIStyle smallFont;
+    GUIStyle largeFont;
+
     void OnGUI()
     {
+        
+
         if (iswin)
         {
             if (leftwin)
             {
-                GUILayout.Label("left won!");
+
+                GUI.Label(new Rect(100, 100, 200, 200), "Right Win", largeFont);
 
             }
             else
             {
-                GUILayout.Label("right won!");
+                GUI.Label(new Rect(100, 100, 200, 200), "Left Win", largeFont);
+                
             }
 
         }
@@ -42,12 +54,12 @@ public class gg : MonoBehaviour {
             iswin = true;
             if (other.gameObject.GetComponent<Block>().twosideball == "left")
             {
-                leftwin = true;
-                Debug.Log("left win");
-            }else
-            {
                 leftwin = false;
                 Debug.Log("Right win");
+            }else
+            {
+                leftwin = true;
+                Debug.Log("Left win");
             }
             Time.timeScale = 0.0f;
         }

@@ -40,6 +40,7 @@ public class Block : MonoBehaviour {
         {
             BreakoutGame.SP.HitBlock();
             Network.Destroy(gameObject);
+            Network.RemoveRPCs(gameObject.GetComponent<NetworkViewID>());
             //Destroy(gameObject);
         }
 
