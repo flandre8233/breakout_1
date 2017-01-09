@@ -304,7 +304,7 @@ public class BreakoutGame : MonoBehaviour
 
     public void SpawnNewRoll()
     {
-        GameObject left_new_roll_Clone = Instantiate(left_new_roll, gameObject.transform.position, Quaternion.identity) as GameObject;
+        //GameObject left_new_roll_Clone = Instantiate(left_new_roll, gameObject.transform.position, Quaternion.identity) as GameObject;
     }
 
     public void WonGame()

@@ -31,7 +31,7 @@ public class Paddle : MonoBehaviour {
                 if (Vector3.Distance(transform.position, oldV3) >= 0.05)
                 {
                     oldV3 = transform.position;
-                    GetComponent<NetworkView>().RPC("sendMovement", RPCMode.Others, transform.position);
+                    GetComponent<NetworkView>().RPC("sendMovementPaddle", RPCMode.Others, transform.position);
                 }
 
             }
@@ -65,7 +65,7 @@ public class Paddle : MonoBehaviour {
     }
 
     [RPC]
-    void sendMovement(Vector3 v3) {
+    void sendMovementPaddle(Vector3 v3) {
         transform.position = v3;
     }
 

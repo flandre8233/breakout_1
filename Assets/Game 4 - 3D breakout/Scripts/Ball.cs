@@ -21,13 +21,7 @@ public class Ball: MonoBehaviour {
         //GetComponent<Rigidbody>().velocity = new Vector3(0, 0, -18);
         setBall();
 
-
-    }
-
-    void setBall()
-    {
-        switch (thisball_type)
-        {
+        switch (thisball_type) {
             case "left":
                 GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 10);//球一開始的動量z橫向移動
                 break;
@@ -37,6 +31,12 @@ public class Ball: MonoBehaviour {
             default:
                 break;
         }
+
+    }
+
+    void setBall()
+    {
+
 
         switch (thisball_type)
         {
@@ -76,13 +76,13 @@ public class Ball: MonoBehaviour {
             {
                 oldV3 = transform.position;
                 GetComponent<NetworkView>().RPC("sendType", RPCMode.Others, thisball_type);
-                GetComponent<NetworkView>().RPC("sendMovement", RPCMode.Others, transform.position);
+                GetComponent<NetworkView>().RPC("sendMovementBALL", RPCMode.Others, transform.position);
             }
 
         }
         else
         {
-
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
 
 
@@ -95,15 +95,14 @@ public class Ball: MonoBehaviour {
             BreakoutGame.SP.LostBall();
             //Destroy(gameObject);
 
-            Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
             Network.Destroy(gameObject);
-
+            Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
         }
 
     }
 
     [RPC]
-    void sendMovement(Vector3 v3)
+    void sendMovementBALL(Vector3 v3)
     {
         transform.position = v3;
     }
@@ -119,9 +118,10 @@ public class Ball: MonoBehaviour {
         if (collision.gameObject.tag == "right_boxcollider" && GetComponent<NetworkView>().isMine)
         {
             BreakoutGame.SP.allow_ball_f();
-            Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
+           
 
             Network.Destroy(gameObject);
+            Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
             //Destroy(gameObject);
         }
     }
