@@ -39,8 +39,9 @@ public class Block : MonoBehaviour {
         if (gameObject.GetComponent<NetworkView>().isMine)
         {
             BreakoutGame.SP.HitBlock();
-            Network.Destroy(gameObject);
             Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
+            Network.Destroy(gameObject);
+
             //Destroy(gameObject);
         }
 

@@ -94,9 +94,10 @@ public class Ball: MonoBehaviour {
             BreakoutGame.SP.allow_ball_f();
             BreakoutGame.SP.LostBall();
             //Destroy(gameObject);
-            Network.Destroy(gameObject);
 
             Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
+            Network.Destroy(gameObject);
+
         }
 
     }
@@ -118,8 +119,9 @@ public class Ball: MonoBehaviour {
         if (collision.gameObject.tag == "right_boxcollider" && GetComponent<NetworkView>().isMine)
         {
             BreakoutGame.SP.allow_ball_f();
+            Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
+
             Network.Destroy(gameObject);
-            Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);       
             //Destroy(gameObject);
         }
     }
