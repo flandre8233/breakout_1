@@ -13,6 +13,7 @@ public class Block : MonoBehaviour {
         if (GetComponent<NetworkView>().isMine)
         {
             GetComponent<NetworkView>().RPC("sendTypeBlock", RPCMode.Others, twosideball);
+            GetComponent<NetworkView>().RPC("sendMovementBlock", RPCMode.Others, transform.position);
 
         }
         else
@@ -39,9 +40,10 @@ public class Block : MonoBehaviour {
         if (gameObject.GetComponent<NetworkView>().isMine && collision.gameObject.tag == "Player")
         {
             BreakoutGame.SP.HitBlock();
-           
             Network.Destroy(gameObject);
             Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
+
+
             //Destroy(gameObject);
         }
 
@@ -65,7 +67,7 @@ public class Block : MonoBehaviour {
             default:
                 break;
             }
-        GetComponent<NetworkView>().RPC("sendMovementBlock", RPCMode.Others, transform.position);
+
     }
 
     }
