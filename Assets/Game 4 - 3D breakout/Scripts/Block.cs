@@ -37,11 +37,13 @@ public class Block : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (gameObject.GetComponent<NetworkView>().isMine && collision.gameObject.tag == "Player")
+
+
+        if (gameObject.GetComponent<NetworkView>().isMine && collision.gameObject.tag == "Player" )
         {
             BreakoutGame.SP.HitBlock();
             Network.Destroy(gameObject);
-            Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
+            //Network.RemoveRPCs(gameObject.GetComponent<NetworkView>().viewID);
 
 
             //Destroy(gameObject);
