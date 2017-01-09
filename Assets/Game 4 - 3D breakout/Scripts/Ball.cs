@@ -75,7 +75,7 @@ public class Ball: MonoBehaviour {
             if (Vector3.Distance(transform.position, oldV3) >= 0.05)
             {
                 oldV3 = transform.position;
-                GetComponent<NetworkView>().RPC("sendType", RPCMode.Others, thisball_type);
+                GetComponent<NetworkView>().RPC("sendTypeBall", RPCMode.Others, thisball_type);
                 GetComponent<NetworkView>().RPC("sendMovementBALL", RPCMode.Others, transform.position);
             }
 
@@ -108,7 +108,7 @@ public class Ball: MonoBehaviour {
     }
 
     [RPC]
-    void sendType(string type)
+    void sendTypeBall(string type)
     {
         thisball_type = type;
         setBall();

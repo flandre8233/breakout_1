@@ -12,7 +12,7 @@ public class Block : MonoBehaviour {
     {
         if (GetComponent<NetworkView>().isMine)
         {
-            GetComponent<NetworkView>().RPC("sendType", RPCMode.Others, twosideball);
+            GetComponent<NetworkView>().RPC("sendTypeBlock", RPCMode.Others, twosideball);
 
         }
         else
@@ -29,7 +29,7 @@ public class Block : MonoBehaviour {
     }
 
     [RPC]
-    void sendType(string type)
+    void sendTypeBlock(string type)
     {
         twosideball = type;
     }
