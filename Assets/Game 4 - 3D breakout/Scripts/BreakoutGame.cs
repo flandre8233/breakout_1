@@ -8,11 +8,15 @@ public class BreakoutGame : MonoBehaviour
     public static BreakoutGame SP;
     public bool gameStart;
 
+    public GameObject yellowLine;
+    public GameObject redLine;
+
     public Transform ballPrefab;
     public Transform paddleBallSpawnPoint;
     public paddleType playerPaddleType;
     public Transform paddleleftspawn;
     public Transform paddlerightspawn;
+    public Transform lineSpawnPoint;
 
     private int totalBlocks;
     private int blocksHit;
@@ -22,8 +26,10 @@ public class BreakoutGame : MonoBehaviour
     [SerializeField]Transform first_Row;
     public float firstPositionZ;
     public GameObject left_new_roll;
-    bool allow_ball_left = true;
-    bool allow_ball_right = true;
+    bool allow_ball = true;
+
+    float deadTime = 2f;
+    int deaddead = 0;
 
     void Awake()
     {
@@ -36,7 +42,7 @@ public class BreakoutGame : MonoBehaviour
     //SpawnBall(0);
 }
     void Start() {
-        firstPositionZ = first_Row.position.z;
+        //firstPositionZ = first_Row.position.z;
     }
 
     void SpawnBall(int ballSpawnMethod)
@@ -49,12 +55,12 @@ public class BreakoutGame : MonoBehaviour
             case 1:
                 cloneObjectleft = (Network.Instantiate(ballPrefab, paddleBallSpawnPoint.position, Quaternion.identity,0) as Transform).gameObject; // left球射出的座標
                 //Debug.Log(paddleleft.position);
-                cloneObjectleft.GetComponent<Ball>().thisball_type = ballType.left;
+                cloneObjectleft.GetComponent<Ball>().thisball_type = "left";
 
                 break;
             case 2:
                 cloneObjectright = (Network.Instantiate(ballPrefab, paddleBallSpawnPoint.position, Quaternion.identity, 0) as Transform).gameObject;
-                cloneObjectright.GetComponent<Ball>().thisball_type = ballType.right;
+                cloneObjectright.GetComponent<Ball>().thisball_type = "right";
                 break;
             case 0:
                 //cloneObjectleft = (Instantiate(ballPrefab, paddleleftspawn.position, Quaternion.identity) as Transform).gameObject; // right球射出的座標
@@ -68,12 +74,29 @@ public class BreakoutGame : MonoBehaviour
         #endregion
     }
 
-
+    bool doOnce = false;
     void Update()
     {
+        
         if (SP.gameStart)
         {
-            if (Input.GetMouseButtonDown(0) && allow_ball_left)
+            blockTimer();
+            if (!doOnce)
+            {
+                doOnce = true;
+
+                addNewLine(lineSpawnPoint.position, playerPaddleType.ToString() ); // spawn new line
+                allBlockMove();
+                addNewLine(lineSpawnPoint.position, playerPaddleType.ToString()); // spawn new line
+                allBlockMove();
+                addNewLine(lineSpawnPoint.position, playerPaddleType.ToString()); // spawn new line
+                allBlockMove();
+                addNewLine(lineSpawnPoint.position, playerPaddleType.ToString()); // spawn new line
+                allBlockMove();
+                addNewLine(lineSpawnPoint.position, playerPaddleType.ToString()); // spawn new line
+                allBlockMove();
+            }
+            if (Input.GetMouseButtonDown(0) && allow_ball)
             {
                 switch (playerPaddleType)
                 {
@@ -88,9 +111,14 @@ public class BreakoutGame : MonoBehaviour
                 }
                 
             }
-                
+
+            if (Input.GetMouseButtonDown(1))
+            {
+
+            }
+
             /*
-            if (Input.GetMouseButtonDown(0) && allow_ball_left)
+            if (Input.GetMouseButtonDown(0) && allow_ball)
                 SpawnBall(1);
             //if()
             if(Input.GetMouseButtonDown(0))
@@ -101,13 +129,106 @@ public class BreakoutGame : MonoBehaviour
             */
         }
 
+
+
     }
-        void OnGUI(){
+
+    float timeCounter = 0.0f;
+    int countdown = 10;
+    public void blockTimer()
+    {
+        if ((timeCounter += Time.deltaTime) >= countdown && countdown > 4 && gameStart )
+        {
+            timeCounter = 0.0f;
+            countdown--;
+            addNewLine(lineSpawnPoint.position, playerPaddleType.ToString()); // spawn new line
+            allBlockMove();
+
+        }
+    }
+
+    public void allBlockMove()
+    {
+        if (playerPaddleType == paddleType.left)
+        {
+            foreach (var item in GameObject.FindGameObjectsWithTag("Pickup"))
+            {
+                if (item.GetComponent<Block>().twosideball == "left")
+                {
+                    item.GetComponent<Block>().move_block();
+                }
+            }
+        }else
+        {
+            foreach (var item in GameObject.FindGameObjectsWithTag("Pickup"))
+            {
+                if (item.GetComponent<Block>().twosideball == "right")
+                {
+                    item.GetComponent<Block>().move_block();
+                }
+            }
+        }
+
+    }
+
+    public void LeftBlockMove()
+    {
+        foreach (var item in GameObject.FindGameObjectsWithTag("Pickup"))
+        {
+            if (item.GetComponent<Block>().twosideball == "right")
+            {
+                item.GetComponent<Block>().move_block();
+            }
+        }
+    }
+
+
+    public void RightBlockMove()
+    {
+        foreach (var item in GameObject.FindGameObjectsWithTag("Pickup"))
+        {
+            if (item.GetComponent<Block>().twosideball == "left")
+            {
+                item.GetComponent<Block>().move_block();
+            }
+        }
+    }
+
+
+    void OnGUI(){
     
         GUILayout.Space(10);
         GUILayout.Label("  Hit: " + blocksHit + "/" + totalBlocks);
         wonOrLostSetting();
 
+    }
+
+    bool isSpawnRed = true;
+    bool isSpawnYellow = true;
+    int spawncounter = 0;
+
+    void addNewLine(Vector3 v3,string type)
+    {
+        GameObject obj;
+        spawncounter++;
+        switch (spawncounter)
+        {
+            case 1:
+                obj = Network.Instantiate(redLine, v3, Quaternion.identity, 0) as GameObject;
+                foreach (var item in obj.GetComponentsInChildren<Block>())
+                {
+                    item.twosideball = type;
+                }
+                break;
+            case 2:
+                obj = Network.Instantiate(yellowLine, v3, Quaternion.identity, 0) as GameObject;
+                foreach (var item in obj.GetComponentsInChildren<Block>())
+                {
+                    item.twosideball = type;
+                }
+                spawncounter = 0;
+                break;
+        }
     }
 
     void wonOrLostSetting()
@@ -117,7 +238,7 @@ public class BreakoutGame : MonoBehaviour
             GUILayout.Label("You Lost!");
             if (GUILayout.Button("Try again"))
             {
-                Application.LoadLevel(Application.loadedLevel);
+                //Application.LoadLevel(Application.loadedLevel);
             }
         }
         else if (gameState == BreakoutGameState.won)
@@ -125,16 +246,29 @@ public class BreakoutGame : MonoBehaviour
             GUILayout.Label("You won!");
             if (GUILayout.Button("Play again"))
             {
-                Application.LoadLevel(Application.loadedLevel);
+                //Application.LoadLevel(Application.loadedLevel);
             }
         }
     }
 
-    public void allow_ball()
+    public void allow_ball_f()
     {
-        allow_ball_left = false;
-        Debug.Log(allow_ball_left);
+        if (allow_ball)
+        {
+            deaddead++;
+            allow_ball = false;
+            StartCoroutine(waitaSec() );
+        }
+
     }
+
+    IEnumerator waitaSec()
+    {
+        yield return new WaitForSeconds(deadTime);
+        deadTime = deadTime + deaddead*1.2f;
+        allow_ball = true;
+    }
+
     public void HitBlock()
     {
         blocksHit++;
@@ -145,9 +279,26 @@ public class BreakoutGame : MonoBehaviour
             SpawnBall(0);
         }
         */
-        if (blocksHit >= totalBlocks)
+
+
+        if (blocksHit >= 10)
         {
-            WonGame();
+            blocksHit = 0;
+            switch (playerPaddleType)
+            {
+                case paddleType.left:
+                    addNewLine(new Vector3(0.3957386f, 3.750214f, 21.09168f), "right"); // spawn new line
+                    LeftBlockMove();
+                    break;
+                case paddleType.right:
+                    addNewLine(new Vector3(0.3957386f, 3.750214f, 15.49168f), "left"); // spawn new line
+                    RightBlockMove();
+                    break;
+                default:
+                    break;
+            }
+            
+            //WonGame();
         }
     }
 

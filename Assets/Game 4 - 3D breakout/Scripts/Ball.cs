@@ -9,7 +9,7 @@ public class Ball: MonoBehaviour {
     Transform leftkillzone;
     Transform right_boxcollider;
     //Transform rightkillzone;
-    public ballType thisball_type;
+    public string thisball_type;
 
     Vector3 oldV3;
 
@@ -19,13 +19,19 @@ public class Ball: MonoBehaviour {
         right_boxcollider = GameObject.FindGameObjectsWithTag("right_boxcollider")[0].transform;
 
         //GetComponent<Rigidbody>().velocity = new Vector3(0, 0, -18);
+        setBall();
 
+
+    }
+
+    void setBall()
+    {
         switch (thisball_type)
         {
-            case ballType.left:
+            case "left":
                 GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 10);//球一開始的動量z橫向移動
                 break;
-            case ballType.right:
+            case "right":
                 GetComponent<Rigidbody>().velocity = new Vector3(0, 0, -10);//球一開始的動量z橫向移動
                 break;
             default:
@@ -34,10 +40,10 @@ public class Ball: MonoBehaviour {
 
         switch (thisball_type)
         {
-            case ballType.left:
+            case "left":
                 gameObject.GetComponent<Renderer>().material.color = Color.red;
                 break;
-            case ballType.right:
+            case "right":
                 gameObject.GetComponent<Renderer>().material.color = Color.yellow;
                 break;
             default:
@@ -69,6 +75,7 @@ public class Ball: MonoBehaviour {
             if (Vector3.Distance(transform.position, oldV3) >= 0.05)
             {
                 oldV3 = transform.position;
+                GetComponent<NetworkView>().RPC("sendType", RPCMode.Others, thisball_type);
                 GetComponent<NetworkView>().RPC("sendMovement", RPCMode.Others, transform.position);
             }
 
@@ -82,9 +89,9 @@ public class Ball: MonoBehaviour {
 
 
         //Is the ball below -3? Then we're game over.
-        if (transform.position.z <= leftkillzone.position.z )
+        if (transform.position.z <= leftkillzone.position.z && GetComponent<NetworkView>().isMine)
         {
-            BreakoutGame.SP.allow_ball();
+            BreakoutGame.SP.allow_ball_f();
             BreakoutGame.SP.LostBall();
             //Destroy(gameObject);
             Network.Destroy(gameObject);
@@ -98,11 +105,18 @@ public class Ball: MonoBehaviour {
     {
         transform.position = v3;
     }
+
+    [RPC]
+    void sendType(string type)
+    {
+        thisball_type = type;
+        setBall();
+    }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "right_boxcollider")
+        if (collision.gameObject.tag == "right_boxcollider" && GetComponent<NetworkView>().isMine)
         {
-            BreakoutGame.SP.LostBall_right();
+            BreakoutGame.SP.allow_ball_f();
             Network.Destroy(gameObject);
             //Destroy(gameObject);
         }

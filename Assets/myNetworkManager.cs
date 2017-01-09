@@ -7,6 +7,7 @@ public class myNetworkManager : MonoBehaviour {
     [SerializeField] Transform leftPaddleSpawnPoint;
     [SerializeField] Transform RightPaddleSpawnPoint;
 
+
     List<GameObject> playerData = new List<GameObject>();
     NetworkView networkView;
     void Start()
@@ -46,14 +47,16 @@ public class myNetworkManager : MonoBehaviour {
         clone.GetComponent<Paddle>().thisPaddleType = Type;
         clone.tag = "playerPaddle";
 
-        BreakoutGame.SP.playerPaddleType = Type;
+        BreakoutGame.SP.playerPaddleType = Type; // maintype
         
         switch (Type)
         {
             case paddleType.left:
                 BreakoutGame.SP.paddleleftspawn = clone.GetComponentInChildren<Transform>();
+                BreakoutGame.SP.lineSpawnPoint.position = new Vector3(0.3957386f, 3.750214f, 15.49168f);
                 break;
             case paddleType.right:
+                BreakoutGame.SP.lineSpawnPoint.position = new Vector3(0.3957386f, 3.750214f, 21.09168f);
                 clone.transform.FindChild("spawnPoint").transform.localPosition -= new Vector3(0, 0, 4);
                 Debug.Log(clone.transform.FindChild("spawnPoint").name) ;
                 BreakoutGame.SP.paddlerightspawn = clone.GetComponentInChildren<Transform>();
@@ -62,6 +65,8 @@ public class myNetworkManager : MonoBehaviour {
                 break;
         }
         BreakoutGame.SP.paddleBallSpawnPoint = clone.transform.FindChild("spawnPoint").transform;
+
+
 
     }
 
