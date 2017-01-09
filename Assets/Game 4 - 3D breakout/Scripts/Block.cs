@@ -6,14 +6,19 @@ public class Block : MonoBehaviour {
     public string twosideball;
     Transform left_block_add;
 
-
+    Vector3 oldV3;
 
     private void Update()
     {
         if (GetComponent<NetworkView>().isMine)
         {
             GetComponent<NetworkView>().RPC("sendTypeBlock", RPCMode.Others, twosideball);
-            GetComponent<NetworkView>().RPC("sendMovementBlock", RPCMode.Others, transform.position);
+
+
+            if (Vector3.Distance(transform.position, oldV3) >= 2.5f) {
+                oldV3 = transform.position;
+                GetComponent<NetworkView>().RPC("sendMovementBlock", RPCMode.Others, transform.position);
+            }
 
         }
         else

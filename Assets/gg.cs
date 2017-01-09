@@ -31,12 +31,12 @@ public class gg : MonoBehaviour {
             if (leftwin)
             {
 
-                GUI.Label(new Rect(100, 100, 200, 200), "Right Win", largeFont);
+                GUI.Label(new Rect(100, 100, 200, 200), "Right lose", largeFont);
 
             }
             else
             {
-                GUI.Label(new Rect(100, 100, 200, 200), "Left Win", largeFont);
+                GUI.Label(new Rect(100, 100, 200, 200), "Left lose", largeFont);
                 
             }
 
